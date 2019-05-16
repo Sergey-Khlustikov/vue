@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/vue.js"></script>
+    <title>Vue</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="sample">
+            <input placeholder="First Name" type="text" v-model="firstName">
+            <input placeholder="Last Name" type="text" v-model="lastName">
+            <input placeholder="Coupon" type="text" v-model="promo">
+            <hr>
+
+            <button @click="showName = !showName" class="btn btn-success">Toggle Name</button>
+            <button @click="toggleName" class="btn btn-primary">Toggle Name</button>
+
+            <hr>
+
+            <h2 v-if="showName">Hello, {{fullName}}</h2>
+            <div v-else>Name is hidden</div>
+            <h3>Your sale is {{sale}}% </h3>
+
+            <hr>
+
+            <button class="btn btn-success" @click="addNumber">Add Number</button>
+            <button class="btn btn-success" @click="sortNumbers">Sort</button>
+            <ul>
+                <li
+                        v-for="(number, index) in numbers"
+                        @mouseenter="onMouseEnter($event, index)"
+                        @mouseleave="onMouseLeave($event, index)"
+                > {{index}} = {{number}}</li>
+            </ul>
+
+            <hr>
+            <table class="table table-bordered">
+                <tr v-for="(value, key, i) in info" :key="key">
+                    <td>{{i}}</td>
+                    <td>{{key}}</td>
+                    <td>{{value}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+
+        function getSale(code, callback) {
+            const codes = {
+                some: 10,
+                newYear: 20,
+            };
+
+            let sale = (codes[code] !== undefined) ? codes[code] : 0;
+
+            setTimeout(() => {
+                callback(sale)
+            }, 500)
+        }
+       const sample = new Vue({
+            el: '.sample',
+            data: {
+                firstName: '',
+                lastName: '',
+                showName: true,
+                sale: 0,
+                promo: '',
+                numbers: [],
+                info: {
+                    name: 'Sergey',
+                    email: 'admin@gmail.com'
+                }
+            },
+            methods: {
+                toggleName() {
+                    this.showName = !this.showName;
+                },
+                addNumber() {
+                    this.numbers.push(Math.floor(Math.random() * 10));
+                },
+                sortNumbers() {
+                    this.numbers.sort((a, b) => {
+                        return a > b ? 1 : -1;
+                    });
+                },
+                onMouseEnter(e, index) {
+                    if(index & 1) {
+                        e.target.style.color = 'red';
+                    }
+                },
+                onMouseLeave(e, index) {
+                    if(index & 1) {
+                        e.target.style.color = 'black';
+                    }
+                }
+            },
+            computed: {
+                fullName() {
+                    return this.firstName + ' ' + this.lastName;
+                }
+            },
+            watch: {
+                promo() {
+                    getSale(this.promo, (sale) => {
+                        this.sale = sale;
+                    })
+                }
+            }
+        });
+    </script>
+</body>
+</html>
