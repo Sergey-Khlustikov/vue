@@ -13,7 +13,7 @@
 <body>
     <div class="wrapper">
         <div class="sample">
-            <form action="#" @submit="sendData" v-if="!done">
+            <form action="#" @submit.prevent="done = true" v-if="!done">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input class="form-control" type="email" id="email" v-model="email">
@@ -91,10 +91,7 @@
                 done: false
             },
             methods: {
-                sendData(e) {
-                    e.preventDefault();
-                    this.done = true;
-                },
+               
                 addGuest() {
                     this.guests.push(this.guest);
                     console.log(this.guests)
