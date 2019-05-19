@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/vue.js"></script>
+    <title>Vue</title>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="sample">
+
+        <div class="form-group">
+            <label for="f_name">First Name</label>
+            <input class="form-control" type="text" id="f_name" v-model="firstName">
+        </div>
+        <h2>{{firstName}}</h2>
+    </div>
+</div>
+
+<script>
+
+    new Vue({
+        el: '.sample',
+        data: {
+            firstName: ''
+        },
+        beforeCreate() {
+            console.log('bc');
+        },
+        created() {
+            console.log('c');
+        },
+        beforeMount() {
+            console.log('bm');
+        },
+        mounted() {
+            console.log('m');
+        },
+        beforeUpdate() {
+            console.log('bu');
+        },
+        updated() {
+            console.log('upd');
+        },
+
+    });
+</script>
+</body>
+</html>

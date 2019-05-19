@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/vue.js"></script>
+    <title>Vue</title>
+
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="sample">
+        <h2 class="alert" :style="[properties, minHeight]">Some Text</h2>
+        <table class="table table-bordered">
+            <tr v-for="(value, name, index) in properties">
+                <td>{{index}}</td>
+                <td>{{name}}</td>
+                <td>
+                    <input type="text" v-model="properties[name]">
+                </td>
+            </tr>
+
+        </table>
+
+        <hr>
+        <button class="btn btn-primary" @click="height += 50">+ height</button>
+        {{minHeight}}
+    </div>
+</div>
+
+<script>
+
+    new Vue({
+        el: '.sample',
+        data: {
+            properties: {
+                color: '#ff0',
+                backgroundColor: '#050',
+            },
+            height: 0
+        },
+        computed: {
+            minHeight() {
+                // return 'min-height: ' + this.height + 'px';
+                return {
+                    minHeight: this.height + 'px'
+                }
+            }
+        }
+
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+.wrapper{
+	padding: 15px;
+	max-width: 600px;
+	margin: auto;
+}
+input#guests {
+	width: 60px;
+}
+.my-info {
+	font-style: italic;
+	font-size: 18px;
+}
+.my-warning {
+	font-style: normal;
+	font-size: 20px;
+}
+.table-some {
+	color: #ffffff;
+	background: #000000;
+}
+.alert {
+	-webkit-transition: all .5s;
+	-moz-transition: all .5s;
+	-ms-transition: all .5s;
+	-o-transition: all .5s;
+	transition: all .5s;
+}
