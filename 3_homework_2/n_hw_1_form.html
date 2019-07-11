@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+	<link href="css/styles.css" rel="stylesheet">
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="sample">
+            <form v-if="!show"  @submit.prevent="show = !show">
+
+        		<div class="progress" >
+					<div class="progress-bar" :style="progressBar"></div>
+				</div>
+				<div>
+
+				<app-input v-for="(el, index) in info"
+                           :key="index"
+                           :name="el.name"
+                           :value="el.value"
+                           :pattern="el.pattern"
+                           @input="onInput(index, $event)"
+                >
+                </app-input>
+
+				</div>
+				<button class="btn btn-primary" :disabled="done < info.length">
+					Send Data
+				</button>
+
+			</form>
+			<div v-else>
+				<table class="table table-bordered">
+					<tr v-for="el in info">
+						<td>{{el.name}}</td>
+						<td>{{el.value}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+    </div>
+	<script>
+		Vue.component('app-input', {
+		    props: ['name', 'value', 'pattern'],
+
+		    template: `
+		   		<div class="form-group"">
+                    <label>{{name}}
+                        <i class="fas" v-if="activated"
+                          :class="validClass"></i>
+                    </label>
+                    <input type="text" class="form-control"
+                            :value="value"
+                            @input="onInput"
+
+                           >
+                </div>
+		    `,
+            data() {
+		        return {
+                    activated: this.value != '',
+                }
+            },
+            methods: {
+                onInput(e) {
+                    this.activated = true;
+                    this.$emit('input', {
+                        value: e.target.value,
+                        valid: this.pattern.test(e.target.value),
+
+                    })
+
+                }
+            },
+            computed: {
+                validClass(){
+                    return this.pattern.test(this.value) ?
+						'fa-check-circle text-success' :
+                        'fa-times-circle text-danger';
+                },
+
+            }
+        });
+
+
+		new Vue({
+			el: '.sample',
+            beforeMount() {
+
+                for(let i = 0; i < this.info.length; i++) {
+                    this.controls.push({
+                        validated: false,
+                    })
+                }
+
+            },
+			data: {
+				info: [
+					{
+						name: 'Name',
+						value: '',
+						pattern: /^[A-Za-z]{1,32}$/
+					},
+					{
+						name: 'Phone',
+						value: '',
+						pattern: /^[0-9]{7,14}$/
+					},
+					{
+						name: 'Email',
+						value: '',
+						pattern: /.+/
+					},
+					{
+						name: 'Some Field 1',
+						value: '',
+						pattern: /.+/
+					},
+					{
+						name: 'Some Field 2',
+						value: '',
+						pattern: /.+/
+					}
+				],
+				controls: [],
+				show: false,
+
+
+			},
+            methods: {
+                onInput(index, data){
+                    this.info[index].value = data.value;
+					this.controls[index].validated = data.valid; 
+                },
+            },
+
+			computed: {
+                done() {
+                    let done = 0;
+                    for(let i = 0; i < this.controls.length; i++) {
+                        if(this.controls[i].validated) {
+                            done++;
+                        }
+                    }
+                    return done;
+                },
+
+                progressBar() {
+                    return {
+                        width: (this.done / this.info.length) * 100 +'%'
+                    }
+                },
+
+
+			}
+
+		});
+	</script>
+</body>
+</html>
