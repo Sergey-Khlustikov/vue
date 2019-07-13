@@ -1,60 +1,112 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+  <div id="app" class="wrapper">
+    <form v-if="!show"  @submit.prevent="show = !show">
+
+      <div class="progress" >
+        <div class="progress-bar" :style="progressBar"></div>
+      </div>
+      <div>
+
+        <app-input v-for="(el, index) in info"
+                   :key="index"
+                   :name="el.name"
+                   :value="el.value"
+                   :pattern="el.pattern"
+                   @input="onInput(index, $event)"
+        >
+        </app-input>
+
+      </div>
+      <button class="btn btn-primary" :disabled="done < info.length">
+        Send Data
+      </button>
+
+    </form>
+    <div v-else>
+      <table class="table table-bordered">
+        <tr v-for="el in info">
+          <td>{{el.name}}</td>
+          <td>{{el.value}}</td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
 <script>
+  import AppInput from './components/AppInput.vue';
 export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+  components: {
+    AppInput
+  },
+  beforeMount() {
+    for(let i = 0; i < this.info.length; i++) {
+      this.controls.push({
+        validated: false,
+      })
     }
+
+  },
+  data() {
+    return {
+      info: [
+        {
+          name: 'Name',
+          value: '',
+          pattern: /^[A-Za-z]{1,32}$/
+        },
+        {
+          name: 'Phone',
+          value: '',
+          pattern: /^[0-9]{7,14}$/
+        },
+        {
+          name: 'Email',
+          value: '',
+          pattern: /.+/
+        },
+        {
+          name: 'Some Field 1',
+          value: '',
+          pattern: /.+/
+        },
+        {
+          name: 'Some Field 2',
+          value: '',
+          pattern: /.+/
+        }
+      ],
+      controls: [],
+      show: false,
+    }
+  },
+  methods: {
+    onInput(index, data){
+      this.info[index].value = data.value;
+      this.controls[index].validated = data.valid;
+    },
+  },
+
+  computed: {
+    done() {
+      let done = 0;
+      for(let i = 0; i < this.controls.length; i++) {
+        if(this.controls[i].validated) {
+          done++;
+        }
+      }
+      return done;
+    },
+
+    progressBar() {
+      return {
+        width: (this.done / this.info.length) * 100 +'%'
+      }
+    },
+
+
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
-</style>
